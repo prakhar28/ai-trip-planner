@@ -1,0 +1,196 @@
+/* Palette: a harbour map. Sea-glass paper, chart ink, harbour blue, and a marigold route line. */
+:root {
+  --paper: #eef3f1;
+  --surface: #ffffff;
+  --ink: #17262f;
+  --muted: #5d6d75;
+  --line: #c9d6d2;
+  --harbour: #1f5c7a;
+  --route: #e3a02f;
+  --warn: #a4471b;
+  --ok: #2f7a4f;
+
+  --display: "Bricolage Grotesque", "Avenir Next", system-ui, sans-serif;
+  --body: "Atkinson Hyperlegible", system-ui, -apple-system, sans-serif;
+
+  --step--1: 0.875rem;
+  --step-0: 1rem;
+  --step-1: 1.25rem;
+  --step-2: 1.6rem;
+  --step-3: clamp(2.2rem, 5vw, 3.4rem);
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font: var(--step-0) / 1.55 var(--body);
+}
+
+.page { max-width: 1180px; margin: 0 auto; padding: 2.5rem 1.25rem 4rem; }
+
+.masthead h1 {
+  font: 700 var(--step-3) / 1 var(--display);
+  letter-spacing: -0.02em;
+  margin: 0 0 0.5rem;
+}
+.masthead p { margin: 0; max-width: 56ch; color: var(--muted); }
+
+.layout {
+  display: grid;
+  grid-template-columns: minmax(300px, 380px) 1fr;
+  gap: 2rem;
+  margin-top: 2.25rem;
+  align-items: start;
+}
+@media (max-width: 860px) { .layout { grid-template-columns: 1fr; } }
+
+/* ---------- Left panel ---------- */
+.panel { position: sticky; top: 1.5rem; display: grid; gap: 1.25rem; }
+@media (max-width: 860px) { .panel { position: static; } }
+
+.ask { display: grid; gap: 0.6rem; }
+.ask label { font: 500 var(--step-1) / 1.2 var(--display); }
+.ask textarea {
+  font: inherit;
+  padding: 0.75rem 0.85rem;
+  border: 1.5px solid var(--line);
+  border-radius: 10px;
+  background: var(--surface);
+  color: var(--ink);
+  resize: vertical;
+}
+.ask textarea:focus-visible { outline: 3px solid var(--harbour); outline-offset: 1px; border-color: var(--harbour); }
+
+.examples { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.example {
+  font: var(--step--1) var(--body);
+  padding: 0.3rem 0.7rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--harbour);
+  cursor: pointer;
+}
+.example:hover { background: var(--surface); }
+
+.go {
+  font: 700 var(--step-0) var(--display);
+  padding: 0.8rem 1rem;
+  border: 0;
+  border-radius: 10px;
+  background: var(--harbour);
+  color: #fff;
+  cursor: pointer;
+}
+.go:disabled { opacity: 0.55; cursor: not-allowed; }
+.go:focus-visible, .example:focus-visible { outline: 3px solid var(--route); outline-offset: 2px; }
+
+.log h2 { font: 500 var(--step-0) var(--display); margin: 0 0 0.5rem; }
+.log ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.35rem; }
+.step {
+  font-size: var(--step--1);
+  padding-left: 1.1rem;
+  position: relative;
+  display: grid;
+}
+.step::before {
+  content: "";
+  position: absolute;
+  left: 0.15rem; top: 0.5em;
+  width: 0.45rem; height: 0.45rem;
+  border-radius: 50%;
+  background: var(--line);
+}
+.step-tool.is-running::before { background: var(--route); animation: pulse 1s ease-in-out infinite; }
+.step-tool.is-ok::before { background: var(--ok); }
+.step-tool.is-failed::before, .step-warn::before { background: var(--warn); }
+.step-thought .step-text { color: var(--muted); font-style: italic; }
+.step-warn .step-text { color: var(--warn); }
+.step-detail {
+  color: var(--muted);
+  font-size: 0.78rem;
+  overflow-wrap: anywhere;
+  max-height: 4.5em;
+  overflow: hidden;
+}
+@keyframes pulse { 50% { opacity: 0.35; } }
+@media (prefers-reduced-motion: reduce) { .step-tool.is-running::before { animation: none; } }
+
+.usage { margin: 0; font-size: var(--step--1); color: var(--muted); }
+
+/* ---------- Result ---------- */
+.result { min-height: 60vh; }
+.empty {
+  border: 1.5px dashed var(--line);
+  border-radius: 14px;
+  padding: 3rem 1.5rem;
+  color: var(--muted);
+  text-align: center;
+}
+.error {
+  border-left: 4px solid var(--warn);
+  background: var(--surface);
+  padding: 1rem 1.2rem;
+  border-radius: 0 10px 10px 0;
+}
+
+.itinerary { background: var(--surface); border-radius: 16px; padding: clamp(1.25rem, 3vw, 2.25rem); }
+.trip-head h2 { font: 700 var(--step-2) / 1.1 var(--display); margin: 0 0 0.35rem; }
+.weather { margin: 0 0 1.25rem; color: var(--muted); max-width: 65ch; }
+
+.budget { border-top: 1px solid var(--line); padding-top: 1rem; }
+.budget-line { display: flex; justify-content: space-between; gap: 1rem; font-weight: 700; flex-wrap: wrap; }
+.bar { height: 8px; background: var(--paper); border-radius: 999px; margin: 0.5rem 0 0.9rem; overflow: hidden; }
+.bar-fill { height: 100%; background: var(--route); border-radius: inherit; }
+.breakdown { display: flex; flex-wrap: wrap; gap: 0.5rem 1.5rem; margin: 0; }
+.breakdown div { display: flex; gap: 0.4rem; }
+.breakdown dt { color: var(--muted); text-transform: capitalize; }
+.breakdown dd { margin: 0; font-weight: 700; }
+
+/* The route: one marigold line running through every day. This is the signature element. */
+.route { list-style: none; margin: 2rem 0 0; padding: 0 0 0 1.6rem; position: relative; }
+.route::before {
+  content: "";
+  position: absolute;
+  left: 0.45rem; top: 0.6rem; bottom: 0.6rem;
+  width: 3px;
+  background: var(--route);
+  border-radius: 2px;
+}
+.day { position: relative; padding-bottom: 1.75rem; }
+.day::before {
+  content: "";
+  position: absolute;
+  left: -1.6rem; top: 0.3rem;
+  width: 1.2rem; height: 1.2rem;
+  border-radius: 50%;
+  background: var(--harbour);
+  border: 3px solid var(--surface);
+  box-shadow: 0 0 0 2px var(--route);
+}
+.day h3 { font: 500 var(--step-1) / 1.25 var(--display); margin: 0 0 0.75rem; }
+.day-num { color: var(--harbour); font-weight: 700; margin-right: 0.35rem; }
+
+.stops { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.9rem; }
+.stop { position: relative; }
+.stop::before {
+  content: "";
+  position: absolute;
+  left: -1.42rem; top: 0.6rem;
+  width: 0.55rem; height: 0.55rem;
+  border-radius: 50%;
+  background: var(--surface);
+  border: 2px solid var(--route);
+}
+.stop-head { display: flex; justify-content: space-between; gap: 1rem; align-items: baseline; }
+.stop-name { font-weight: 700; }
+.stop-cost { font-size: var(--step--1); color: var(--muted); white-space: nowrap; }
+.stop-time { font-size: var(--step--1); color: var(--harbour); }
+.stop p { margin: 0.15rem 0 0; max-width: 68ch; }
+
+.tips { border-top: 1px solid var(--line); padding-top: 1rem; }
+.tips h3 { font: 500 var(--step-1) var(--display); margin: 0 0 0.4rem; }
+.tips ul { margin: 0; padding-left: 1.1rem; }
